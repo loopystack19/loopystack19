@@ -1,3 +1,6 @@
+env:
+  GH_PAT: ${{ secrets.GH_PAT }}
+
 name: Generate snake
 
 on:
@@ -8,10 +11,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Set up git auth
+        run: |
+          git config --global user.name "loopystack19"
+          git config --global user.email "your-email@domain.com"
+          git remote set-url origin https://${GH_PAT}@github.com/loopystack19/loopystack19.git
 
       - name: Generate snake
         uses: Platane/snk@v3
@@ -19,8 +30,8 @@ jobs:
           github_user_name: loopystack19
           outputs: dist/snake.svg
 
-      - name: Upload to repo
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: "Update snake animation"
-          add: "dist/snake.svg"
+      - name: Commit and push
+        run: |
+          git add .
+          git commit -m "Automated snake update" || echo "No changes"
+          git push origin main
