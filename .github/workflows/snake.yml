@@ -28,7 +28,7 @@ jobs:
         uses: Platane/snk@v3
         with:
           github_user_name: loopystack19
-          outputs: dist/snake.svg
+          outputs: dist/snake-dark.svg
 
       - name: Commit and push
         run: |
